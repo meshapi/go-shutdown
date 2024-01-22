@@ -237,7 +237,7 @@ func TestTriggerRuntime(t *testing.T) {
 				}
 
 				if !shutdownCalled {
-					pipeline.SetShutdownFunc(func() {
+					pipeline.SetCompletionFunc(func() {
 						shutdownCalled = true
 					})
 				}
@@ -289,7 +289,7 @@ func TestDefault(t *testing.T) {
 	shutdown.AddParallelSequence(ShutdownMarker{name: "5"}, ShutdownMarker{name: "6"})
 	shutdown.SetTimeout(350 * time.Millisecond)
 	shutdown.SetLogger(nil)
-	shutdown.SetShutdownFunc(func() {
+	shutdown.SetCompletionFunc(func() {
 		shutdownCalled = true
 	})
 	shutdown.Trigger(contextWithMonitor(monitor))

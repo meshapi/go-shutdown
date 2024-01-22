@@ -54,16 +54,16 @@
 //
 //	AddSteps(
 //		HandlerFuncWithName("a", func(){}),
-//		HandlerFuncWithName("b", func(){}))
+//		HandlerFuncWithName("b", func(){})).
 //	AddParallelSequence(
 //		HandlerFuncWithName("c", func(){}),
-//		HandlerFuncWithName("d", func(){}))
-//	AddSteps(HandlerFuncWithName("e", func(){}))
+//		HandlerFuncWithName("d", func(){})).
+//	AddSteps(HandlerFuncWithName("e", func(){})).
 //	AddSequence(HandlerFuncWithName("f", func(){}))
 //
 // Additional features include:
 // * SetLogger: Set a custom logger for the shutdown pipeline (default is plog.Default()).
 // * SetTimeout: Define a timeout for the execution of the entire shutdown pipeline.
-// * SetShutdownFunc: Add a callback function to handle the end of the shutdown pipeline, ensuring it gets called in
+// * SetCompletionFunc: Add a callback function to handle the end of the shutdown pipeline, ensuring it gets called in
 // any case, even in the presence of panics, errors, or timeouts.
 package shutdown

@@ -42,10 +42,10 @@ func (m *Manager) SetTimeout(duration time.Duration) {
 	m.timeout = duration
 }
 
-// SetShutdownFunc sets a function to get called after all of the shutdown steps have been executed. Regardless of
+// SetCompletionFunc sets a function to get called after all of the shutdown steps have been executed. Regardless of
 // panics or errors, this function will always get executed as the very last step. Even when a the pipeline times out,
 // this function gets called before returning.
-func (m *Manager) SetShutdownFunc(f func()) {
+func (m *Manager) SetCompletionFunc(f func()) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 

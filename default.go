@@ -63,11 +63,11 @@ func SetLogger(logger Logger) {
 	Default().SetLogger(logger)
 }
 
-// SetShutdownFunc sets a function to get called after all of the shutdown steps have been executed. Regardless of
+// SetCompletionFunc sets a function to get called after all of the shutdown steps have been executed. Regardless of
 // panics or errors, this function will always get executed as the very last step. Even when a the pipeline times out,
 // this function gets called before returning.
-func SetShutdownFunc(f func()) {
-	Default().SetShutdownFunc(f)
+func SetCompletionFunc(f func()) {
+	Default().SetCompletionFunc(f)
 }
 
 // SetTimeout sets the shutdown pipeline timeout. This indicates that when shutdown is triggered, the entire pipeline
