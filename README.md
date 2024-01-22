@@ -1,5 +1,9 @@
 # Graceful shutdown utility for Go
 
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/meshapi/go-shutdown?style=flat-square)
+![GitHub Tag](https://img.shields.io/github/v/tag/meshapi/go-shutdown)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/meshapi/go-shutdown/pr.yaml)
+
 The go-shutdown package offers a collection of utilities designed for managing shutdown procedures,
 primarily focused on gracefully handling termination signals from the kernel, which is a common and
 expected use case.
