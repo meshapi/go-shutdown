@@ -15,21 +15,18 @@ gracefully and also to remain flexible for more advanced usecases.
 
 
 ## Features
-===========
 
 * Use different concurrency options for steps in the shutdown pipeline (#configure-your-shutdown-pipeline)
 * Manual trigger or wait for SIGTERM signal (#shutdown-trigger)
 * Set timeout (#timeout)
 
 ## Installation
-===============
 
 ```bash
 go get github.com/meshapi/go-shutdown
 ```
 
 ## Getting started
-==================
 
 The way to handle shutdowns is to create and configure a shutdown pipeline and decide how it should get triggered.
 There is a default shutdown pipeline for convenience but you can create separate pipelines as well.
@@ -169,7 +166,6 @@ A completion function callback can be set via `SetCompletionFunc`. This function
 there are panics, errors or timeouts.
 
 ## Contributions
-================
 
 Contributions are absolutely welcome and please write tests for the new functionality added/modified.
 Additionally, we ask that you include a test function reproducing the issue raised to save everyone's time.
