@@ -168,6 +168,7 @@ A completion function callback can be set via `SetCompletionFunc`. This function
 there are panics, errors or timeouts.
 
 ## Contributions
+----------------
 
 Contributions are absolutely welcome and please write tests for the new functionality added/modified.
 Additionally, we ask that you include a test function reproducing the issue raised to save everyone's time.
