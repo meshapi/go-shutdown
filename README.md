@@ -109,9 +109,11 @@ manager.AddSequence(shutdown.HandlerFuncWithName("f", func(){}))
 
 ```go
 httpServer := &http.Server{}
-if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-    log.Fatalf("HTTP server failed: %s", err)
-}
+go func() {
+    if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+        log.Fatalf("HTTP server failed: %s", err)
+    }
+}()
 
 shutdown.AddSteps(shutdown.HandlerFuncWithName("http", httpServer.Shutdown))
 shutdown.WaitForInterrupt()
