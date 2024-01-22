@@ -167,8 +167,9 @@ shutdown.SetTimeout(15*time.Second)
 A completion function callback can be set via `SetCompletionFunc`. This function will get called in any case, even if
 there are panics, errors or timeouts.
 
-## Contributions
 ----------------
+
+## Contributions
 
 Contributions are absolutely welcome and please write tests for the new functionality added/modified.
 Additionally, we ask that you include a test function reproducing the issue raised to save everyone's time.
