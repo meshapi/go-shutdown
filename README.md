@@ -16,9 +16,9 @@ gracefully and also to remain flexible for more advanced usecases.
 
 ## Features
 
-* [Use different concurrency options for steps in the shutdown pipeline] (#configure-your-shutdown-pipeline)
-* [Manual trigger or wait for SIGTERM signal] (#shutdown-trigger)
-* [Set timeout] (#timeout)
+* [Use different concurrency options for steps in the shutdown pipeline](#configure-your-shutdown-pipeline)
+* [Manual trigger or wait for SIGTERM signal](#shutdown-trigger)
+* [Set timeout](#timeout)
 
 ## Installation
 
