@@ -133,76 +133,60 @@ func (m *Manager) Trigger(ctx context.Context) {
 	errorCount := 0
 	resultChannel := make(chan handlerResult)
 
-	go func() {
-		for _, step := range m.steps {
-			waitGroup := sync.WaitGroup{}
-			waitGroup.Add(len(step.handlers))
+mainLoop:
+	for _, step := range m.steps {
+		remainingHandlers := len(step.handlers)
 
+		go func() {
 			for _, handler := range step.handlers {
 				if step.parallel {
 					go func(h NamedHandler) {
 						m.executeHandler(ctx, h, resultChannel)
-						waitGroup.Done()
 					}(handler)
 				} else {
 					m.executeHandler(ctx, handler, resultChannel)
-					waitGroup.Done()
 				}
 			}
+		}()
 
-			waitGroup.Wait()
+		for remainingHandlers > 0 {
+			select {
+			case result := <-resultChannel:
+				if result.Err != nil {
+					errorCount++
+					m.err(result.HandlerName + " shutdown failed: " + result.Err.Error())
+				} else {
+					m.info(result.HandlerName + " shutdown completed")
+				}
+				remainingHandlers--
+			case <-ctx.Done():
+				m.err("context canceled")
+				errorCount++
+				break mainLoop
+			}
 		}
-		close(resultChannel)
-	}()
-
-	// blocks until the result channel is closed.
-	errorCount = m.processResultChannel(ctx, resultChannel)
+	}
 
 	if m.shutdownFunc != nil {
 		m.shutdownFunc()
 	}
 
 	if errorCount > 0 {
-		if m.logger != nil {
-			m.logger.Error(fmt.Sprintf("shutdown pipeline completed with %d errors", errorCount))
-		}
+		m.err(fmt.Sprintf("shutdown pipeline completed with %d errors", errorCount))
 	} else {
-		if m.logger != nil {
-			m.logger.Info("shutdown pipeline completed with no errors")
-		}
+		m.info("shutdown pipeline completed with no errors")
 	}
 }
 
-// processResultChannel receives from the result channel until the channel is closed. This method is blocking. In the
-// end it will return the count of errors. In the event of a context cancellation, this method returns immediately and
-// increases the count by 1.
-func (m *Manager) processResultChannel(ctx context.Context, resultChannel <-chan handlerResult) int {
-	errorCount := 0
+func (m *Manager) info(text string) {
+	if m.logger != nil {
+		m.logger.Info(text)
+	}
+}
 
-	for {
-		select {
-		case result, ok := <-resultChannel:
-			if ok {
-				if result.Err != nil {
-					errorCount++
-					if m.logger != nil {
-						m.logger.Error(result.HandlerName + " shutdown failed: " + result.Err.Error())
-					}
-				} else {
-					if m.logger != nil {
-						m.logger.Info(result.HandlerName + " shutdown completed")
-					}
-				}
-			} else {
-				// channel is closed, that means there is no more handler result to wait for.
-				return errorCount
-			}
-		case <-ctx.Done():
-			if m.logger != nil {
-				m.logger.Error("context canceled")
-			}
-			return errorCount + 1
-		}
+func (m *Manager) err(text string) {
+	if m.logger != nil {
+		m.logger.Error(text)
 	}
 }
 
@@ -226,9 +210,7 @@ func (m *Manager) WaitForInterrupt() {
 	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
 	<-exit
 
-	if m.logger != nil {
-		m.logger.Info("received interrupt signal, starting shutdown procedures...")
-	}
+	m.info("received interrupt signal, starting shutdown procedures...")
 
 	m.Trigger(context.Background())
 }
