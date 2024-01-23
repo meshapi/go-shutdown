@@ -15,11 +15,11 @@ import (
 // steps when a shutdown is triggered. In order to start the shutdown procedure upon receiving a kernel Interrupt
 // signal, use WaitForInterrupt() blocking method.
 type Manager struct {
-	steps        []shutdownStep
-	timeout      time.Duration
-	shutdownFunc func()
-	logger       Logger
-	lock         sync.Mutex
+	steps            []shutdownStep
+	timeout          time.Duration
+	completionFuncnc func()
+	logger           Logger
+	lock             sync.Mutex
 }
 
 // New creates a new shutdown pipeline.
@@ -49,7 +49,7 @@ func (m *Manager) SetCompletionFunc(f func()) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
-	m.shutdownFunc = f
+	m.completionFuncnc = f
 }
 
 // SetLogger sets the shutdown logger. If set to nil, no logs will be written.
@@ -167,8 +167,8 @@ mainLoop:
 		}
 	}
 
-	if m.shutdownFunc != nil {
-		m.shutdownFunc()
+	if m.completionFuncnc != nil {
+		m.completionFuncnc()
 	}
 
 	if errorCount > 0 {
